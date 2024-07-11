@@ -6,10 +6,10 @@ Inspired by numerical Unix time clocks, but slightly less (or more) useful.
 ## Hardware
 This project uses an ESP32 board and a 32 pixel long WS2812 addressable led strip or ring.
 Tested on:
- - [Lolin D32 Pro](https://www.aliexpress.com/item/32883116057.html)
- - [Lolin S2 Mini](https://www.aliexpress.com/item/1005003145192016.html)
- - [ESP32-C3 Super Mini](https://www.aliexpress.com/item/1005006334515931.html)
  - [32 Bit WS2812 ring](https://www.aliexpress.com/item/1005006358767684.html)
+ - [Lolin D32 Pro](https://www.aliexpress.com/item/32883116057.html) Rust firmware works fine.
+ - [Lolin S3 Mini](https://www.aliexpress.com/item/1005005449219195.html) Dual core, but keeps glitching with Rust firmware. 
+ - [ESP32-C3 Super Mini](https://www.aliexpress.com/item/1005006334515931.html) Single core, C firmware works fine.
 
  Board with dual core cpu is preferred, making it possible to run LED control and WiFi on separate cores so that WiFi interrupts do not mess up the timings of WS2812.
  Rust version of the software uses two cores and uses built in SNTP features of ESP32 to keep internal clock accurate.
@@ -28,6 +28,9 @@ You need to modify `src/main.rs` or `src/main.cpp` to add your own WiFi credenti
 ESP32 runs on 3.3V, while according to specs WS2812 requires signal of 0.7*VCC, so 3,5V for 5V LEDs. This works fine most of the time, but in case you have bad luck, you need to level shift the control line to 5V.
 More info about this at [adafruit website](https://learn.adafruit.com/neopixel-levelshifter/shifting-levels).
 
+## Enclosure
+Clock body is printed in PLA with 0.4mm nozzle and 0.2mm layer height. Keyhole slots have one layer of support bridging under them, clean up the slots if you intend to use them. There is currently only a mount for D32 Pro board, which covers most of the pads. I split it in two in slicer and printed the lip part standing up with small supports under the screw mounts. Mount is attached with four 2x10mm plastic screws. Ring is being held down with the board mount and few pieces of Kapton tape.
+
 ## TODO:
-- Enclosure design
+- Get a smaller 2 core board to work, D32 is a total overkill.
 
