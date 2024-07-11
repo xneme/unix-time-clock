@@ -2,10 +2,10 @@
 #include <WiFi.h>
 #include <rmt_led_strip.hpp>
 
-// 1 LED, pin 15
-arduino::ws2812 leds(0, 16);
+// 32 LEDs, pin 15
+arduino::ws2812 leds(15, 32);
 
-const char *ssid = "SSID"; // Your wifi ssid
+const char *ssid = "SSID";         // Your wifi ssid
 const char *password = "PASSWORD"; // Your wifi password
 
 const char *ntpServer = "pool.ntp.org";
@@ -63,6 +63,7 @@ void setup() {
 
   Serial.begin(115200);
 
+  Serial.printf("Starting...");
   leds.initialize();
   full_blue();
   // connect to WiFi

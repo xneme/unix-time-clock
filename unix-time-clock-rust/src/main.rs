@@ -21,7 +21,7 @@ fn main() -> ! {
 
     let peripherals = Peripherals::take().unwrap();
     let modem = peripherals.modem;
-    let led_pin = peripherals.pins.gpio0;
+    let led_pin = peripherals.pins.gpio15;
     let channel = peripherals.rmt.channel0;
 
     let _w = wifi::configure(SSID, PASS, modem).expect("Could not configure wifi");
@@ -48,13 +48,13 @@ fn main() -> ! {
     std::thread::spawn(move || {
         let mut led_strip =
             LedPixelEsp32Rmt::<RGB8, LedPixelColorGrb24>::new(channel, led_pin).unwrap();
-         let pixels = std::iter::repeat(RGB8::from((0, 0, 0))).take(32);
-         led_strip.write(pixels).unwrap();
+        let pixels = std::iter::repeat(RGB8::from((0, 0, 0))).take(32);
+        led_strip.write(pixels).unwrap();
 
         // Obtain System Time, convert to UTC Time, and get Unix Timestamp
         let st_now = SystemTime::now();
         let dt_now_utc: DateTime<Utc> = st_now.clone().into();
-        let unix_timestamp = dt_now_utc.timestamp();
+        let unix_timestamp = dt_now_utc.timestamp() + 2;
 
         let unix_timestamp_bits = format!("{unix_timestamp:032b}");
 
@@ -71,7 +71,7 @@ fn main() -> ! {
             led_strip.write(pixels).unwrap();
 
             // Print Time
-            println!("{} = {}", unix_timestamp_bits , unix_timestamp);
+            println!("{} = {}", unix_timestamp_bits, unix_timestamp);
             // Delay
             FreeRtos::delay_ms(1000);
         }
@@ -99,17 +99,21 @@ fn startup_animation(
     led_strip: &mut LedPixelEsp32Rmt<RGB8, LedPixelColorGrb24>,
     time_pixels: Vec<RGB8>,
 ) {
-    let mask = std::iter::repeat(RGB8::from((0, 5, 0))).take(32).collect::<Vec<RGB8>>();
+    let mask = std::iter::repeat(RGB8::from((0, 5, 0)))
+        .take(32)
+        .collect::<Vec<RGB8>>();
 
-    let mut pixels = std::iter::repeat(RGB8::from((0, 0, 0))).take(32).collect::<Vec<RGB8>>();
+    let mut pixels = std::iter::repeat(RGB8::from((0, 0, 0)))
+        .take(32)
+        .collect::<Vec<RGB8>>();
 
-    for index in 0..31 {
+    for index in 0..32 {
         pixels[index] = mask[index];
         led_strip.write(pixels.clone()).unwrap();
         FreeRtos::delay_ms(25);
     }
     FreeRtos::delay_ms(200);
-    for index in (0..31).rev() {
+    for index in (0..32).rev() {
         pixels[index] = time_pixels[index];
         led_strip.write(pixels.clone()).unwrap();
         FreeRtos::delay_ms(25);
