@@ -29,7 +29,7 @@ ESP32 runs on 3.3V, while according to specs WS2812 requires signal of 0.7*VCC, 
 More info about this at [adafruit website](https://learn.adafruit.com/neopixel-levelshifter/shifting-levels).
 
 ## Enclosure
-Clock body is printed in PLA with 0.4mm nozzle and 0.2mm layer height. Keyhole slots have one layer of support bridging under them, clean up the slots if you intend to use them. There is currently only a mount for D32 Pro board, which covers most of the pads. I split it in two in slicer and printed the lip part standing up with small supports under the screw mounts. Mount is attached with four 2x10mm plastic screws. Ring is being held down with the board mount and few pieces of Kapton tape.
+Clock body is printed in PLA with 0.4mm nozzle and 0.2mm layer height. Keyhole slots have one layer of support bridging under them, clean up the slots if you intend to use them. There is currently only a mount for D32 Pro board, which covers most of the pads. I split it in two in slicer and printed the part with groove standing up with small supports under the screw mounts. Mount is attached with four 2x10mm plastic screws. Ring is being held down with the board mount and few pieces of Kapton tape.
 
 ## TODO:
 - Get a smaller 2 core board to work, D32 is a total overkill.
