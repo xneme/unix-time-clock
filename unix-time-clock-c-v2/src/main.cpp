@@ -1,30 +1,15 @@
+#ifndef UNIT_TEST
+// Main application - only compiled for ESP32 targets
+
 #include "time.h"
 #include <WiFi.h>
 #include <esp_wifi.h>
 #include <rmt_led_strip.hpp>
 #include "credentials.h"
+#include <clock_utils.h>
 
 // 32 LEDs, pin 15
 htcw::ws2812 leds(15, 32);
-
-// Vertical order for top-to-bottom animation
-// Pairs LEDs at the same height, starting from top
-const int verticalOrder[32] = {
-  0, 31, 1, 30, 2, 29, 3, 28, 4, 27, 5, 26, 6, 25, 7, 24,
-  8, 23, 9, 22, 10, 21, 11, 20, 12, 19, 13, 18, 14, 17, 15, 16
-};
-
-// Vertical rank: 0 = top, 15 = bottom
-// LEDs on opposite sides of the circle at the same height have the same rank
-const int verticalRank[32] = {
-  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,  // LEDs 0-15
-  15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0   // LEDs 16-31
-};
-
-// Get vertical position (0.0 = top, 1.0 = bottom)
-float getVerticalPosition(int ledIndex) {
-  return verticalRank[ledIndex] / 15.0f;
-}
 
 const char *ntpServer = "pool.ntp.org";
 const long gmtOffset_sec = 0;
@@ -61,24 +46,7 @@ void syncNtpTime() {
   }
 }
 
-// HSV to RGB conversion for rainbow effect
-void hsvToRgb(uint8_t h, uint8_t s, uint8_t v, uint8_t *r, uint8_t *g, uint8_t *b) {
-  uint8_t region = h / 43;
-  uint8_t remainder = (h - (region * 43)) * 6;
-
-  uint8_t p = (v * (255 - s)) >> 8;
-  uint8_t q = (v * (255 - ((s * remainder) >> 8))) >> 8;
-  uint8_t t = (v * (255 - ((s * (255 - remainder)) >> 8))) >> 8;
-
-  switch (region) {
-    case 0:  *r = v; *g = t; *b = p; break;
-    case 1:  *r = q; *g = v; *b = p; break;
-    case 2:  *r = p; *g = v; *b = t; break;
-    case 3:  *r = p; *g = q; *b = v; break;
-    case 4:  *r = t; *g = p; *b = v; break;
-    default: *r = v; *g = p; *b = q; break;
-  }
-}
+// hsvToRgb and getVerticalPosition are now in clock_utils.h
 
 // Rainbow animation - shown immediately on boot
 // Colors form a gradient from top to bottom
@@ -249,3 +217,5 @@ void loop() {
 
   delay(1000);
 }
+
+#endif // UNIT_TEST

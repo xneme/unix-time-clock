@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container:
+      image: platformio/platformio-core:latest
+
+    defaults:
+      run:
+        working-directory: unix-time-clock-c-v2
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create credentials file
+        run: cp src/credentials.h.example src/credentials.h
+
+      - name: Build for LOLIN D32 Pro
+        run: pio run -e lolin_d32_pro
+
+      - name: Build for ESP32-CAM
+        run: pio run -e esp32cam
+
+      - name: Build for ESP32-C3 Super Mini
+        run: pio run -e esp32-c3-supermini
+
+      - name: Build for LOLIN S3 Mini
+        run: pio run -e lolin_s3_mini
+
+      - name: Run native tests
+        run: pio test -e native
